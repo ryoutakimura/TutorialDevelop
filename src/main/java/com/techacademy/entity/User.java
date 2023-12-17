@@ -20,7 +20,7 @@ public class User {
         男性, 女性
     }
 
-    /** 主キーid 自動生成 */
+    /** 主キー。自動生成 */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
