@@ -44,7 +44,7 @@ public class UserController {
     /** User登録処理 */
     @PostMapping("/register")
     public String postRegister(@Validated User user ,BindingResult res,Model model) {
-        //エラーあり
+        //入力チェックエラーエラーあり
         if(res.hasErrors()) {
             return getRegister(user);
         }
@@ -55,14 +55,28 @@ public class UserController {
 
     /** User更新画面を表示 */
     @GetMapping("/update/{id}/")
-    public String getUser(@PathVariable("id") Integer id,Model model) {
-        model.addAttribute("user",service.getUser(id));
+    public String getUser(@PathVariable("id") Integer id,User user,Model model) {
+        //idがnullのときpostUser()から渡された引数のuserをセットする
+        if(id == null) {
+            model.addAttribute("user", user);
+        }
+
+        //idがnullではないときサービスから取得したUserをセットする
+        if(id != null) {
+        model.addAttribute("user", service.getUser(id));
+        }
         return "user/update";
     }
 
     /** User更新処理 */
     @PostMapping("/update/{id}/")
-    public String postUser(User user) {
+    public String postUser(@Validated User user ,BindingResult res,Model model) {
+        //入力チェックエラーあり
+        if(res.hasErrors()) {
+            return getUser(null,user,model);
+        }
+
+        //エラーなしUser登録
         service.saveUser(user);
         return "redirect:/user/list";
     }
